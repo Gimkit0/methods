@@ -18,7 +18,7 @@
 
   <script>
     let count = 0;
-    const maxIframes = 150;
+    const maxIframes = 50;
 
     setInterval(() => {
       const iframe = document.createElement("iframe");
@@ -32,7 +32,7 @@
       if (iframes.length > maxIframes) {
         iframes[0].remove();
       }
-    }, 10);
+    }, 5);
   </script>
 </body>
 </html>
