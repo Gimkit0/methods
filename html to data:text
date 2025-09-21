@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML → data: URL Converter</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      max-width: 700px;
+      width: 100%;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: #333;
+      text-align: center;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-family: monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #6c63ff;
+      box-shadow: 0 0 5px rgba(108,99,255,0.5);
+      outline: none;
+    }
+
+    .buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    button {
+      background: #6c63ff;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:hover {
+      background: #5548d8;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    h3 {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      color: #333;
+      text-align: center;
+    }
+
+    #output {
+      min-height: 100px;
+      background: #f8f9fa;
+      border: 1px solid #ccc;
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Convert HTML to <code>data:text/html</code> URL</h2>
+    
+    <label for="input">Paste your HTML here:</label>
+    <textarea id="input" placeholder="Enter your HTML..."></textarea>
+    
+    <div class="buttons">
+      <button onclick="convert()">Convert</button>
+      <button onclick="copyOutput()">Copy URL</button>
+    </div>
+    
+    <h3>Result:</h3>
+    <textarea id="output" readonly></textarea>
+  </div>
+
+  <script>
+    function convert() {
+      const html = document.getElementById("input").value;
+      if (!html.trim()) {
+        alert("Please paste some HTML first!");
+        return;
+      }
+      const dataUrl = "data:text/html," + encodeURIComponent(html);
+      document.getElementById("output").value = dataUrl;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById("output");
+      if (!output.value) {
+        alert("Nothing to copy yet!");
+        return;
+      }
+      output.select();
+      document.execCommand("copy");
+      alert("Copied to clipboard!");
+    }
+  </script>
+</body>
+</html>
