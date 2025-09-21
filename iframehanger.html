@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Iframes</title>
+  <style>
+    iframe {
+      width: 300px;
+      height: 200px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h2>H$nger</h2>
+
+  <script>
+    let count = 0;
+    const maxIframes = 10;
+
+    setInterval(() => {
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://proxy.com";
+      iframe.title = `iframe-${count}`;
+      document.body.appendChild(iframe);
+
+      count++;
+      
+      const iframes = document.querySelectorAll("iframe");
+      if (iframes.length > maxIframes) {
+        iframes[0].remove();
+      }
+    }, 500);
+  </script>
+</body>
+</html>
