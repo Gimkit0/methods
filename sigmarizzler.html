@@ -1,0 +1,588 @@
+<!--
+    Woah wait... Are you sigma?
+    You have to be a sigma in order to read this code!
+-->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>SigmaRizzler™️</title>
+        <link rel="icon" type="image/png" href="https://cdn-0001.qstv.on.epicgames.com/UGEaCGnLHdgTkmEioX/image/landscape_comp.jpeg">
+        
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!--Imports-->
+        <script src="https://gimkit0.github.io/uv-static/active/uv/uv.bundle.js" charset="UTF-8" defer></script>
+        <script src="https://gimkit0.github.io/uv-static/active/uv/uv.config.js" charset="UTF-8" defer></script>
+        <script src="https://gimkit0.github.io/uv-static/active/register.js" charset="UTF-8"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/336f1c172b.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+    </head>
+    <body onload="active.init()">
+        <header class="text-left fadeInUp">
+            <h1>SigmaRizzler</h1>
+            <input type="file" id="fileInput-html" accept=".html" style="display: none;">
+            <input type="file" id="fileInput-css" accept=".css" style="display: none;">
+            <input type="file" id="fileInput-javascript" accept=".js" style="display: none;">
+            
+            <button id="open-file" class="editor-button">
+                <i class="fa-solid fa-file"></i>Open File
+            </button>
+            <button id="save-file" class="editor-button" style="margin-right: 125px;">
+                <i class="fa-solid fa-floppy-disk"></i>Save File
+            </button>
+            <button id="clear-button" class="editor-button" style="margin-right: 250px;">
+                <i class="fa-solid fa-trash-can-arrow-up"></i>Clear
+            </button>
+        </header>
+        <main>
+            <div class="content fadeInUp">
+                <div class="editor-container fadeInUp">
+                    <h6 style="margin-bottom: 3px;"><i class="fa-solid fa-code"></i>Editor</h6>
+                    <div id="tabs" class="tabs-container">
+                        <button id="html-button" class="tab tab-active"><i class="fa-brands fa-html5"></i>HTML</button>
+                        <button id="css-button" class="tab"><i class="fa-brands fa-css3-alt"></i>CSS</button>
+                        <button id="js-button" class="tab"><i class="fa-brands fa-js"></i>JavaScript</button>
+                    </div>
+                    <div id="editorContainer" class="editor" style="height: 100%; position: relative;"></div>
+                </div>
+                <div class="output-container fadeInUp">
+                    <h6><i class="fa-regular fa-window-restore"></i>Output</h6>
+                    <button id="fullscreen" class="output-button"><i class="fa-solid fa-expand"></i></button>
+                    <button id="open-in-tab" class="output-button" style="margin-right: 70px;"><i class="fa-solid fa-globe"></i></button>
+                    <button id="open-in-window" class="output-button" style="margin-right: 140px;"><i class="fa-solid fa-window-maximize"></i></button>
+                    <iframe id="output" style="height: 100%; position: relative; top: -5px"></iframe>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
+
+<!--CSS-->
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+
+    @keyframes animate {
+
+        0%{
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+            border-radius: 0;
+        }
+
+        100%{
+            transform: translateY(-1000px) rotate(720deg);
+            opacity: 0;
+            border-radius: 50%;
+        }
+
+    }
+
+    @-webkit-keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0, 10%, 0);
+            transform: translate3d(0, 10%, 0)
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: none;
+            transform: none
+        }
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0, 10%, 0);
+            -ms-transform: translate3d(0, 10%, 0);
+            transform: translate3d(0, 10%, 0)
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: none;
+            -ms-transform: none;
+            transform: none
+        }
+    }
+
+    body {
+        color: white;
+        line-height: 150%;
+        background-color: rgb(30,30,30);
+        background: linear-gradient(180deg, #130101f2, #000000);
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        background-position: center;
+        transition: all .5s ease-in-out;
+        overflow: hidden;
+    }
+
+    main {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    header {
+        background-color: rgb(25,25,25, .5);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.07),
+                    0 2px 4px rgba(0,0,0,0.07),
+                    0 4px 8px rgba(0,0,0,0.07),
+                    0 8px 16px rgba(0,0,0,0.07);
+        z-index: 100;
+        height: 50px;
+        backdrop-filter: blur 4px;
+    }
+
+    h1 {
+        font-size: 20px;
+        width: 50px;
+        position: absolute;
+        padding: 15px;
+        z-index: 99;
+    }
+
+    h6 {
+        padding: 5px 15px 5px 15px;
+        background-color: rgb(35,35,35, .5);
+        border-top: solid 1px rgb(50,50,50);
+        backdrop-filter: blur(4px);
+    }
+
+    i {
+        margin-right: 10px;
+        color: red;
+    }
+
+    .content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .editor-container {
+        height: 50%;
+        resize: vertical;
+        overflow: hidden;
+    }
+
+    .editor-button {
+        color: white;
+        background-color: transparent;
+        border: solid 0px;
+        font-size: 16px;
+        padding: 10px 15px 10px 15px;
+        transition: all .3s;
+        right: 10px;
+        top: 3px;
+        position: fixed;
+        z-index: 101;
+        border-radius: 10px;
+    }
+
+    .editor-button:hover {
+        color: red;
+        backdrop-filter: blur(2px);
+        background-color: rgb(50,50,50, .5);
+    }
+
+    .editor-button:active {
+        border: solid 1px red;
+    }
+
+    .tabs-container {
+        background-color: rgb(35,35,35, .5);
+    }
+
+    .tab {
+        background-color: transparent;
+        border: 0;
+        color: white;
+        padding: 10px;
+        transition: all .1s;
+    }
+
+    .tab-active {
+        background-color: rgb(50,50,50,.5);
+        color: red;
+        border-bottom: solid 2px red;
+    }
+
+    .output-container {
+        height: 50%;
+        width: 100%;
+        flex-grow: 1;
+    }
+
+    .output-container iframe {
+        width: 100%;
+        top: 0;
+        position: relative;
+    }
+
+    .output-button {
+        color: white;
+        background-color: rgb(25,25,25, .8);
+        backdrop-filter: blur(5px);
+        border: solid 0px;
+        border-radius: 100%;
+        padding: 10px 15.5px 10px 15.5px;
+        position: absolute;
+        z-index: 5;
+        border: solid 0px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        visibility: hidden;
+        transition: all .3s;
+    }
+
+    .output-button i {
+        margin: 0 auto;
+    }
+
+    .output-button:hover {
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2),
+        0 2.5px 5px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+    }
+            
+    .output-button:active {
+        box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.2),
+        0 0px 2.5px rgba(0, 0, 0, 0.1);
+        transform: translateY(3px);
+    }
+
+    .fadeInUp {
+        animation: fadeInUp .6s ease-out 0s;
+    }
+    
+    #output {
+        background-color: white;
+    }
+</style>
+
+<!--JavaScript-->
+<script>
+    var active = [];
+    var deps = [
+        textbox = null,
+        output = null,
+        old = '', 
+    ];
+
+    active._activeOutputButton = false;
+    active._switchingTab = false;
+    active._language = null;
+
+    var html = '';
+    var css = '';
+    var javascript = '';
+
+    const settings = {
+        DEFAULT_TEXT_HTML: '<!DOCTYPE html>\n'
+            + '<html>\n'
+                + '\t<head>\n'
+                    + '\t\t<title>SigmaRizzler Template</title>\n'
+                + '\t</head>\n'
+                + '\t<body>\n'
+                    + '\t\t<h1>Welcome to SigmaRizzler™️!</h1>\n'
+                    + '\t\t<p>Put your source code up here! ^^^</p>\n'
+                + '\t</body>\n'
+            + '</html>\n'
+            ,
+        DEFAULT_TEXT_CSS: 'body {\n'
+            + '\tbackground-color:white;\n'
+            + '\tfont-family:arial;\n'
+            + '}'
+        ,
+        DEFAULT_TEXT_JS: 'console.log("Hello world!")',
+
+        DEFAULT_LANGUAGE: 'html',
+    }
+
+    active.init = function() {
+        require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' }});
+        require(['vs/editor/editor.main'], function () {
+            deps.textbox = monaco.editor.create(document.getElementById('editorContainer'), {
+                value: '',
+                language: 'html',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                fontSize: 14
+            });
+
+            monaco.editor.defineTheme('mono-dark', {
+                base: 'vs-dark',
+                inherit: true,
+                rules: [
+                    { token: 'global', foreground: '84d6f7' },
+                    { token: 'tag', foreground: 'ff6a00' },
+                    { token: 'keyword', foreground: 'ff6a00' },
+                    { token: 'comment', foreground: '666666' },
+                    { token: 'number', foreground: 'ffc600' },
+                    { token: 'string', foreground: 'adf195' },
+                    { token: 'delimiter', foreground: 'ff7315' },
+                    { token: 'boolean', foreground: 'ffc600', fontStyle: "bold" },
+                    { token: 'identifier', foreground: 'd4e9fa'},
+                    { token: 'localmethod', foreground: 'fdfbac'},
+                ],
+                colors: {
+                    'editor.background': '#1E1E1E'
+                }
+            });
+            
+            monaco.editor.IEditorOptions = {
+                cursorSmoothCaretAnimation: true,
+            };
+
+            monaco.editor.setTheme('mono-dark');
+
+            deps.output = document.getElementById('output');
+
+            active.setButton('open-file', 'editor', function(event) {
+                const fileInput = document.getElementById("fileInput-"+active._language)
+                
+                fileInput.click();
+
+                fileInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (event) {
+                            deps.textbox.setValue(event.target.result);
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+            })
+
+            active.setButton('save-file', 'editor', function(event) {
+                const fileName = prompt("Enter the filename:", "sigma.html");
+
+                if (fileName) {
+                    const codeContent = deps.textbox.getValue();
+                    const blob = new Blob([codeContent], { type: 'text/html' });
+                    const downloadLink = document.createElement('a');
+
+                    downloadLink.href = URL.createObjectURL(blob);
+                    downloadLink.download = fileName;
+
+                    document.body.appendChild(downloadLink);
+
+                    downloadLink.click();
+
+                    document.body.removeChild(downloadLink);
+                }
+            })
+
+            active.setButton('clear-button', 'editor', function(event) {
+                deps.textbox.setValue('');
+            })
+
+            active.setButton('fullscreen', 'output', function(event) {
+                deps.output.requestFullscreen();
+            })
+
+            active.setButton('open-in-tab', 'output', function(event) {
+                const code = active.getValues();
+
+                const newTab = window.open();
+                newTab.document.open();
+                newTab.document.write(code);
+                newTab.document.close();
+
+                const script = newTab.document.createElement("script");
+                script.type = "text/javascript";
+                script.textContent = javascript;
+                newTab.document.body.appendChild(script);
+            })
+
+            active.setButton('open-in-window', 'output', function(event) {
+                const code = active.getValues();
+
+                const newWindow = window.open("", "_blank", "width=800,height=600");
+                newWindow.document.open();
+                newWindow.document.write(code);
+                newWindow.document.close();
+
+                const script = newWindow.document.createElement("script");
+                script.type = "text/javascript";
+                script.textContent = javascript;
+                newWindow.document.body.appendChild(script);
+            });
+
+            active.setButton('html-button', 'tab', function() {
+                active.switchLang('html');
+                active.highlightActiveTab('html-button');
+            })
+
+            active.setButton('css-button', 'tab', function() {
+                active.switchLang('css');
+                active.highlightActiveTab('css-button');
+            })
+
+            active.setButton('js-button', 'tab', function() {
+                active.switchLang('javascript');
+                active.highlightActiveTab('js-button');
+            })
+
+            active.updateValue('html', settings.DEFAULT_TEXT_HTML)
+            active.updateValue('css', settings.DEFAULT_TEXT_CSS)
+            active.updateValue('javascript', settings.DEFAULT_TEXT_JS)
+
+            active.switchLang(settings.DEFAULT_LANGUAGE)
+            active.autoupdate()
+        });
+    }
+
+    active.autoupdate = function() {
+        var editorContent = deps.textbox.getValue()
+
+        if (!active._switchingTab) {
+            if (editorContent !== deps.old) {
+                active.updateValue(active._language, deps.textbox.getValue());
+                deps.old = editorContent;
+
+                var value = active.getValues()
+                if (deps.output && deps.output.contentDocument) {
+                    deps.output.contentDocument.open();
+                    deps.output.contentDocument.write(value);
+                    deps.output.contentWindow.eval(javascript)
+                    deps.output.contentDocument.close();
+                } else {
+                    console.log('Content Document not found!')
+                }
+            }
+        } else {
+            deps.old = editorContent;
+            active._switchingTab = false;
+        }
+        window.setTimeout(active.autoupdate, 150);
+    }
+
+    active.wait = function(duration, func) {
+        if (typeof func === "function") {
+            setTimeout(func, duration);
+        } else {
+            console.error("Provided argument is not a function.");
+        }
+    };
+
+    active.highlightActiveTab = function(activeButtonId) {
+        const tabButtons = ['html-button', 'css-button', 'js-button'];
+        
+        active._switchingTab = true
+        tabButtons.forEach(function(buttonId) {
+            const button = document.getElementById(buttonId);
+            if (buttonId === activeButtonId) {
+                button.classList.add('tab-active');
+            } else {
+                button.classList.remove('tab-active');
+            }
+        });
+        active.wait(1000, function() {
+            active._switchingTab = false;
+        })
+    };
+
+    active.switchLang = function(lang) {
+        const model = deps.textbox.getModel();
+
+        if (model) {
+            active.updateValue(active._language, deps.textbox.getValue());
+            active._language = lang;
+
+            if (lang == 'html') {
+                deps.textbox.setValue(html);
+            } else if (lang == "css") {
+                deps.textbox.setValue(css);
+            } else if (lang == "javascript") {
+                deps.textbox.setValue(javascript);
+            }
+
+            monaco.editor.setModelLanguage(model, active._language);
+        } else {
+            console.error("No model found in the editor.");
+        }
+    };
+
+    active.updateValue = function(lang, value) {
+        if (typeof(lang) == "string" && typeof(value) == "string") {
+            if (lang == 'html') {
+                html = value
+            } else if (lang == "css") {
+                css = value
+            } else if (lang == "javascript") {
+                javascript = value
+            }
+        }
+    };
+
+    active.getValues = function() {
+        return html
+            + ' <style>' + css + '</style>'
+    };
+
+    active.setButton = function(button, type, func) {
+        const element = document.getElementById(button);
+        const output = deps.output
+
+        if (typeof(func) == "function") {
+            element.addEventListener('click', function(event) {
+                if (type == "output") {
+                    element.style.visibility = 'hidden';
+                }
+                func(event)
+            })
+        }
+        if (type == "output") {
+            element.style.visibility = 'hidden';
+            element.addEventListener('click', function () {
+                element.style.visibility = 'hidden';
+            });
+            output.addEventListener('mouseover', function(event) {
+                element.style.visibility = 'visible';
+            });
+            element.addEventListener('mouseover', function(event) {
+                active._activeOutputButton = true
+                element.style.visibility = 'visible';
+            });
+            element.addEventListener('mouseout', function(event) {
+                active._activeOutputButton = false
+            })
+            output.addEventListener('mouseout', function(event) {
+                active.wait(300, function() {
+                    if (!active._activeOutputButton) {
+                        element.style.visibility = 'hidden';
+                    }
+                })
+            });
+        }
+    }
+    
+    async function start() {
+        try {
+            await registerSW();
+        } catch (err) {
+            throw err;
+        }
+        
+        let iframe = document.getElementById('output');
+        iframe.src = __uv$config.prefix + __uv$config.encodeUrl("https://www.blank.org/");
+        iframe.sandbox = "allow-same-origin allow-scripts allow-forms allow-pointer-lock allow-modals allow-orientation-lock allow-presentation allow-storage-access-by-user-activation"
+    }
+    
+    start()
+</script>
