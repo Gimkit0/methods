@@ -15,29 +15,41 @@
 </head>
 <body>
   <script>
-    let count = 0;
-    const maxIframes = 100;
-
-    setInterval(() => {
-      const iframe = document.createElement("iframe");
-      iframe.src = "https://www.croxyproxy.com";
-      iframe.title = `iframe-${count}`;
-      iframe.frameBorder = 0;
-      iframe.scrolling = "no";
-      iframe.allowFullscreen = false;
-      iframe.style.border = "none";
-      iframe.style.opacity = 1;
-      iframe.style.display = "none";
-
-      document.body.appendChild(iframe);
-
-      count++;
-      
-      const iframes = document.querySelectorAll("iframe");
-      if (iframes.length > maxIframes) {
-        iframes[0].remove();
-      }
-    }, 100);
+    function createPrintWindow(content) {
+        const win = window.open('', '_blank');
+        win.document.write(content);
+        return win;
+    }
+    function generateIframes(url, count) {
+        return Array.from({length: count}, () => {
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.title = `iframe-${count}`;
+            iframe.frameBorder = 0;
+            iframe.scrolling = "no";
+            iframe.allowFullscreen = false;
+            iframe.style.border = "none";
+            iframe.style.opacity = 1;
+            iframe.style.display = "none";
+            return iframe;
+        });
+    }
+    function printContent(win) {
+        try {
+            win.print();
+            setTimeout(() => win.close(), 500);
+            return true;
+        } catch (error) {
+            console.error('Print failed:', error);
+            return false;
+        }
+    }
+    async function print(url) {
+        const printWindow = createPrintWindow('<html><body style="background:#00000"></body></html>');
+        const iframes = generateIframes("https://www.croxyproxy.com", 200);
+        iframes.forEach(iframe => printWindow.document.body.appendChild(iframe));
+        return printContent(printWindow);
+    }
   </script>
 </body>
 </html>
