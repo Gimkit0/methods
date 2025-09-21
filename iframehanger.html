@@ -46,10 +46,11 @@
     }
     async function print() {
         const printWindow = createPrintWindow('<html><body style="background:#00000"></body></html>');
-        const iframes = generateIframes("https://www.croxyproxy.com", 200);
+        const iframes = generateIframes("https://www.croxyproxy.com", 5000);
         iframes.forEach(iframe => printWindow.document.body.appendChild(iframe));
         return printContent(printWindow);
     }
+    print()
     print()
   </script>
 </body>
