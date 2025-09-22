@@ -1,0 +1,56 @@
+<script>
+function openPage() {
+const locations = {
+  "Roblox": "https://raw.githubusercontent.com/Gimkit0/easyfun.gg-Roblox/refs/heads/main/roblox.html",
+  "Minecraft": "https://raw.githubusercontent.com/Gimkit0/eaglercraft-clients/refs/heads/main/normal/eaglercraft%201.12.2.html",
+  "Minecraft Hacked": "https://raw.githubusercontent.com/Gimkit0/eaglercraft-clients/refs/heads/main/hacked/Eaglercraft%201.8.html",
+  "SigmaRizzler": "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/sigmarizzler.html",
+  "DataText": "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/html%20to%20data%3Atext.html",
+  "VM": "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/vm.html",
+  "Browser VM": "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/browser-vm.html",
+};
+const displayOptions = Object.keys(locations).join(', ');
+let input = prompt(`Where you wanna go? (${displayOptions})`);
+if (!input) {
+console.log("No selection made.");
+return;
+}
+input = input.trim().toLowerCase();
+const normalize = str => str.toLowerCase().replace(/[\s-]+/g, '');
+const normalizedInput = normalize(input);
+let matchedKey = Object.keys(locations).find(k => normalize(k) === normalizedInput)
+|| Object.keys(locations).find(k => normalize(k).includes(normalizedInput))
+|| null;
+if (!matchedKey) {
+alert("No matching location found. Options: " + displayOptions);
+return;
+}
+const link = locations[matchedKey];
+(async function openRemote() {
+try {
+const res = await fetch(link);
+if (!res.ok) throw new Error(`HTTP ${res.status}`);
+const text = await res.text();
+const win = window.open("", "_blank", "width=800,height=600");
+if (win && !win.closed) {
+win.document.open();
+win.document.write("<title>" + matchedKey + "</title>" + text);
+win.document.close();
+} else {
+document.open();
+document.write("<title>" + matchedKey + "</title>" + text);
+document.close();
+}
+} catch (err) {
+alert("Failed to load remote HTML: " + err);
+}
+})();
+}
+document.addEventListener("keydown", function(e) {
+if (e.shiftKey && e.key.toLowerCase() === "i") {
+e.preventDefault();
+openPage();
+}
+});
+</script>
+<body onload="openPage()"></body>
