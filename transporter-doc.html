@@ -11,7 +11,7 @@ const locations = {
   "Browser VM": "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/browser-vm.html",
 };
 const displayOptions = Object.keys(locations).join(', ');
-let input = prompt(`Where you wanna go? (${displayOptions})`);
+let input = prompt(`Where you wanna go?\n\n${displayOptions}`);
 if (!input) {
 console.log("No selection made.");
 return;
