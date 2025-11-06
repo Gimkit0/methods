@@ -64,12 +64,19 @@
     margin-bottom: 1.5rem;
   }
 
-  /* Search Bar */
+  /* Sticky Search Bar */
   .search-bar {
+    position: sticky;
+    top: 0; /* keeps it visible at top of scroll */
+    z-index: 10;
     display: flex;
     align-items: center;
-    position: relative;
+    position: sticky;
+    background: #1e1e2e;
+    padding: 10px 0;
     margin-bottom: 2rem;
+    border-bottom: 1px solid #313244;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
 
   .search-bar input {
@@ -90,7 +97,7 @@
 
   .search-bar i {
     position: absolute;
-    right: 15px;
+    right: 20px;
     color: #a6adc8;
     font-size: 1.1rem;
   }
@@ -133,11 +140,6 @@
     display: block;
   }
 
-  /* Smooth animations */
-  .fade-in {
-    animation: fadeIn 0.4s ease;
-  }
-
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -155,3 +157,4 @@
     });
   });
 </script>
+
