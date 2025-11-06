@@ -1,0 +1,157 @@
+<script src="https://kit.fontawesome.com/424b17ee5b.js" crossorigin="anonymous"></script>
+<div class="games-container">
+  <h1>Games Library</h1>
+  <p class="subtitle">Browse through categories and find your next favorite game!</p>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="gameSearch" placeholder="Search games..." />
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </div>
+
+  <!-- Game Sections -->
+  <div class="game-section" data-category="music">
+    <h2>Music Games</h2>
+    <div class="game-grid">
+      <div class="game-card"><span>BeatDrop</span></div>
+      <div class="game-card"><span>Rhythm Rush</span></div>
+      <div class="game-card"><span>SoundStep</span></div>
+    </div>
+  </div>
+
+  <div class="game-section" data-category="multiplayer">
+    <h2>Multiplayer</h2>
+    <div class="game-grid">
+      <div class="game-card"><span>BattleZone</span></div>
+      <div class="game-card"><span>Team Titans</span></div>
+      <div class="game-card"><span>SkyClash</span></div>
+    </div>
+  </div>
+
+  <div class="game-section" data-category="puzzle">
+    <h2>Puzzle Games</h2>
+    <div class="game-grid">
+      <div class="game-card"><span>BrainLink</span></div>
+      <div class="game-card"><span>Logic Loop</span></div>
+      <div class="game-card"><span>Mosaic Master</span></div>
+    </div>
+  </div>
+
+  <div class="game-section" data-category="arcade">
+    <h2>Arcade</h2>
+    <div class="game-grid">
+      <div class="game-card"><span>Pixel Runner</span></div>
+      <div class="game-card"><span>Space Blast</span></div>
+      <div class="game-card"><span>Retro Racer</span></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .games-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  h1 {
+    color: #cba6f7;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    color: #a6adc8;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Search Bar */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .search-bar input {
+    width: 100%;
+    background: #181825;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 10px 40px 10px 15px;
+    color: #cdd6f4;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s;
+  }
+
+  .search-bar input:focus {
+    border-color: #cba6f7;
+  }
+
+  .search-bar i {
+    position: absolute;
+    right: 15px;
+    color: #a6adc8;
+    font-size: 1.1rem;
+  }
+
+  /* Game Sections */
+  .game-section {
+    margin-bottom: 2rem;
+  }
+
+  .game-section h2 {
+    color: #89b4fa;
+    margin-bottom: 1rem;
+  }
+
+  .game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  .game-card {
+    background: #181825;
+    border: 1px solid #313244;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    color: #cdd6f4;
+    font-weight: 500;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .game-card:hover {
+    background: #313244;
+    border-color: #cba6f7;
+    transform: translateY(-3px);
+  }
+
+  .game-card span {
+    display: block;
+  }
+
+  /* Smooth animations */
+  .fade-in {
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  // Simple search filter
+  const searchInput = document.getElementById("gameSearch");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    document.querySelectorAll(".game-card").forEach(card => {
+      const name = card.textContent.toLowerCase();
+      card.style.display = name.includes(query) ? "block" : "none";
+    });
+  });
+</script>
