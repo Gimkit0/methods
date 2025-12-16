@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Google Sheets</title>
+        <link rel="shortcut icon" href="https://ssl.gstatic.com/docs/spreadsheets/spreadsheets_2023q4.ico" />
+        
+        <script src="https://kit.fontawesome.com/424b17ee5b.js" crossorigin="anonymous"></script>
+        <style>
+            :root {
+                --base: #1e1e2e;
+                --mantle: #181825;
+                --crust: #11111b;
+                --text: #cdd6f4;
+                --subtext0: #a6adc8;
+                --subtext1: #bac2de;
+                --surface0: #313244;
+                --surface1: #45475a;
+                --surface2: #585b70;
+                --overlay0: #6c7086;
+                --overlay1: #7f849c;
+                --overlay2: #9399b2;
+                --blue: #89b4fa;
+                --lavender: #b4befe;
+                --green: #a6e3a1;
+                --mauve: #cba6f7;
+            }
+            body {
+                background-color: var(--base);
+                color: var(--text);
+                font-family: "Inter", "Segoe UI", sans-serif;
+                margin: 0;
+                display: flex;
+                height: 100vh;
+                overflow: hidden;
+            }
+            .sidebar {
+                width: 220px;
+                background-color: var(--mantle);
+                border-right: 1px solid var(--surface1);
+                display: flex;
+                flex-direction: column;
+                padding-top: 30px;
+            }
+            .sidebar h2 {
+                color: var(--mauve);
+                text-align: center;
+                margin-bottom: 30px;
+                padding-right: 10px;
+            }
+            .nav-btn {
+                display: flex;
+                align-items: center;
+                padding: 12px 20px;
+                color: var(--subtext1);
+                text-decoration: none;
+                transition: background 0.3s, color 0.3s;
+                border-radius: 6px;
+                margin: 4px 12px;
+                font-size: 16px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                text-align: left;
+            }
+            .debug-text {
+                text-align: center;
+                margin-top: 30px;
+                margin-bottom: 30px;
+                font-size: 16px;
+                font-weight: 500;
+            }
+            .error {
+                color: red;
+            }
+            .nav-btn i {
+                width: 20px;
+                text-align: center;
+                font-size: 18px;
+            }
+            .nav-btn span {
+                margin-left: 12px;
+                font-weight: 500;
+            }
+            .nav-btn:hover,
+            .nav-btn.active {
+                background-color: var(--surface0);
+                color: var(--mauve);
+            }
+            .main {
+                flex: 1;
+                background-color: var(--base);
+                position: relative;
+            }
+
+            embed {
+                width: 100%;
+                height: 100%;
+                border: none;
+                border-radius: 0;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 20px;
+                left: 240px;
+                color: var(--overlay1);
+                font-size: 0.8rem;
+            }
+        </style>
+    </head>
+    <body>
+        <aside class="sidebar">
+            <h2>Zan X</h2>
+            <button class="nav-btn active" data-page="home.html">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-page="games.html">
+                <i class="fa-solid fa-gamepad"></i>
+                <span>Games</span>
+            </button>
+        </aside>
+        <main class="main">
+            <iframe id="content" style="width: 100%;height: 100%;border: none;"></iframe>
+        </main>
+        <script>
+            const BASE_URL = "https://raw.githubusercontent.com/Gimkit0/methods/refs/heads/main/zan-pages/";
+            const TESTING_MODE = true;
+            const CATPPUCCIN_STYLE = `
+			<style>
+                body {
+                background:#1e1e2e;
+                color:#cdd6f4;
+                font-family:Inter,Segoe UI,sans-serif;
+                margin:0;
+                padding:1rem;
+                overflow:auto;
+                }
+                a { color:#89b4fa; }
+                h1,h2,h3 { color:#cba6f7; }
+                .debug-text {text-align: center;margin-top: 30px;margin-bottom: 30px;font-size: 16px;font-weight: 500;}
+                .error {color: red;}
+                code {background: #313244;color: #f9e2af;padding: 2px 6px;border-radius: 5px;font-family: "Fira Code", monospace;}
+            </style>`;
+            const buttons = document.querySelectorAll(".nav-btn");
+            const content = document.getElementById("content");
+            async function loadPage(page) {
+                if (TESTING_MODE) {
+                    content.removeAttribute("srcdoc");
+                    content.src = page;
+                    return;
+                }
+
+                content.srcdoc = CATPPUCCIN_STYLE + `<p class="debug-text">Loading...</p>`;
+                try {
+                    const res = await fetch(BASE_URL + page);
+                    if (!res.ok) throw new Error(`Failed to load ${page}`);
+                    const html = await res.text();
+                    content.srcdoc = CATPPUCCIN_STYLE + html;
+                } catch (err) {
+                    content.srcdoc = CATPPUCCIN_STYLE + `
+			<p class="error debug-text">Error: ${err.message}. Check to see if your internet is set to BASD Chrome and not Guest, if this issue still continues, it can be slow internet or github server issues.</p>`;
+                }
+            }
+            
+            buttons.forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    buttons.forEach((b) => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    const page = btn.getAttribute("data-page");
+                    loadPage(page);
+                });
+            });
+            
+            loadPage("home.html");
+        </script>
+    </body>
+</html>
