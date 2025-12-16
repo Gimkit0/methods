@@ -1,57 +1,357 @@
 <script src="https://kit.fontawesome.com/424b17ee5b.js" crossorigin="anonymous"></script>
+<script>
+  function renderGames(containerId, games) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    games.forEach(game => {
+      const card = document.createElement("div");
+      card.className = "game-card game-thumb";
+      card.innerHTML = `
+        <img src="${game.thumbnail}" alt="${game.name}">
+        <div class="overlay">
+          <button class="play-button">
+            <i class="fa-solid fa-play"></i> Play
+          </button>
+        </div>
+        <span>${game.name}</span>
+      `;
+      card.addEventListener("click", () => openGame(game));
+      container.appendChild(card);
+    });
+  }
+  function derenderGames(sectionId) {
+    const container = document.getElementById(sectionId);
+    if (container) container.innerHTML = "";
+  }
+</script>
+
+<div class="game-player hidden" id="gamePlayer">
+    <div class="player-header">
+      <button id="closeGame" class="player-button"><i class="fa-solid fa-xmark"></i></button>
+      <button id="fullscreenGame" class="player-button"><i class="fa-solid fa-expand"></i></button>
+      <span id="gameTitle"></span>
+    </div>
+    <embed id="gameEmbed" src="" width="100%" height="100%" />
+  </div>
 <div class="games-container">
-  <h1>Games Library</h1>
-  <p class="subtitle">Browse through categories and find your next favorite game!</p>
+  <!-- MAIN GAME LIBRARY -->
+  <section id="mainLibrary" class="active-section">
+    <h1>Games Library</h1>
+    <p class="subtitle">Browse through categories and find your next favorite game!</p>
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <input type="text" id="gameSearch" placeholder="Search games..." />
-    <i class="fa-solid fa-magnifying-glass"></i>
-  </div>
-
-  <!-- Game Sections -->
-  <div class="game-section" data-category="music">
-    <h2>Music Games</h2>
-    <div class="game-grid">
-      <div class="game-card"><span>BeatDrop</span></div>
-      <div class="game-card"><span>Rhythm Rush</span></div>
-      <div class="game-card"><span>SoundStep</span></div>
+    <div class="search-bar">
+      <input type="text" id="gameSearch" placeholder="Search game types..." />
+      <i class="fa-solid fa-magnifying-glass"></i>
     </div>
-  </div>
 
-  <div class="game-section" data-category="multiplayer">
-    <h2>Multiplayer</h2>
-    <div class="game-grid">
-      <div class="game-card"><span>BattleZone</span></div>
-      <div class="game-card"><span>Team Titans</span></div>
-      <div class="game-card"><span>SkyClash</span></div>
+    <!-- Game Sections -->
+    <div class="game-section" data-category="music">
+      <h2>Music Games</h2>
+      <div class="game-grid">
+        <div class="game-card" data-target="fnf"><span>FNF Games</span></div>
+        <div class="game-card" data-target="rhythm"><span>Rhythm Games</span></div>
+      </div>
     </div>
-  </div>
 
-  <div class="game-section" data-category="puzzle">
-    <h2>Puzzle Games</h2>
-    <div class="game-grid">
-      <div class="game-card"><span>BrainLink</span></div>
-      <div class="game-card"><span>Logic Loop</span></div>
-      <div class="game-card"><span>Mosaic Master</span></div>
+    <div class="game-section" data-category="multiplayer">
+      <h2>Multiplayer</h2>
+      <div class="game-grid">
+        <div class="game-card" data-target="battleroyale"><span>Battle Royale</span></div>
+        <div class="game-card" data-target="fps"><span>FPS</span></div>
+        <div class="game-card" data-target="simulators"><span>Simulators</span></div>
+        <div class="game-card" data-target="platforms"><span>Platforms</span></div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div class="game-section" data-category="arcade">
-    <h2>Arcade</h2>
-    <div class="game-grid">
-      <div class="game-card"><span>Pixel Runner</span></div>
-      <div class="game-card"><span>Space Blast</span></div>
-      <div class="game-card"><span>Retro Racer</span></div>
-    </div>
-  </div>
+  <!-- GAME DETAILS SECTIONS -->
+  <section id="fnf" class="details-section hidden">
+    <button class="backButton"><i class="fa-solid fa-arrow-left"></i> Back</button>
+    <h2 class="section-title">FNF Games</h2>
+    <p class="section-desc">Enjoy Friday Night Funkin’-inspired rhythm battles! Hit the notes and prove your groove.</p>
+
+    <div class="game-grid" id="fnfGames"></div>
+    <script>
+      const fnfGames = [
+        {
+          name: "FNF Classic",
+          embedUrl: "https://fnf.kdata1.com/2025/fnf/7500/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2020/11/Friday-Night-Funkin.png"
+        },
+        {
+          name: "Friday Night Funkin VS. KAPI v2",
+          embedUrl: "https://fnf.kdata1.com/kapi-arcade-showdown/2/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/04/Friday-Night-Funkin-VS.-KAPI.jpg"
+        },
+        {
+          name: "FNF: The Blueballs Incident (Trollge)",
+          embedUrl: "https://fnf.run3.io/blueballs-incident-trollge/1.18/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/06/fnf-the-blueballs-incident-trollge.jpg"
+        },
+        {
+          name: "FNF Silly Billy vs Yourself",
+          embedUrl: "https://fnf.kdata1.com/2024/silly-billy-vs-yourself/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2024/05/FNF-Silly-Billy-vs-Yourself.png"
+        },
+        {
+          name: "FNF vs Impostor Among Us V4",
+          embedUrl: "https://fnf.kdata1.com/impostor-v4/1.5/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2023/01/FNF-vs-Impostor-Among-Us-V4-2.jpg"
+        },
+        {
+          name: "Friday Night Funkin’ V.S. Whitty Full Week",
+          embedUrl: "https://fnf.run3.io/whitty/5/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/03/friday-night-funkin-v-s-whitty-full-week.png"
+        },
+        {
+          name: "Friday Night Funkin VS Garcello",
+          embedUrl: "https://fnf.run3.io/garcello/5/?32s",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/05/Friday-Night-Funkin-VS-Garcello.jpg"
+        },
+        {
+          name: "Friday Night Funkin’ Sarvente’s Mid-Fight Masses",
+          embedUrl: "https://fnf.run3.io/midfight/2/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/04/friday-night-funkin-sarventes-mid-fight-masses-1.png"
+        },
+        {
+          name: "FNF Vs. Tricky Version 2.0 (Phase 3)",
+          embedUrl: "https://fnf.run3.io/tricky2/4/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/06/fnf-vs-tricky-version-2-0.jpg"
+        },
+        {
+          name: "FNF Character Test Playground",
+          embedUrl: "https://fnf.run3.io/playground/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/06/FNF-Character-Test-Playground.jpg"
+        },
+        {
+          name: "Friday Night Funkin&#8217; Pibby Corrupted",
+          embedUrl: "https://fnf.kdata1.com/2024/pibby-corrupted/1.5/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/12/friday-night-funkin-pibby-corrupted.jpg"
+        },
+        {
+          name: "FNF vs TABI Ex Boyfriend",
+          embedUrl: "https://fnf.run3.io/tabi/5/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/05/FNF-vs-TABI-Ex-Boyfriend.jpg"
+        },
+        {
+          name: "FFriday Night Funkin’ + Hatsune Miku",
+          embedUrl: "https://fnf.run3.io/miku/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/04/friday-night-funkin-hatsune-miku.jpg"
+        },
+        {
+          name: "FNF: Miku Sing Retry Now",
+          embedUrl: "https://fnf.kdata1.com/2025/retry/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2025/11/fnf-miku-sing-retry-now.jpg"
+        },
+        {
+          name: "FNF: Miku Sing Don’t Forget to Monitor (Best Friend Remix)",
+          embedUrl: "https://fnf.kdata1.com/2025/tora-monitor/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2025/10/fnf-miku-sing-dont-forget-to-monitor-best-friend-remix.jpg"
+        },
+        {
+          name: "Friday Night Funkin Vs Matt 2.0",
+          embedUrl: "https://run3.io/popgame/fnf/mattwii-2/?ddd",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/04/Friday-Night-Funkin-VS-Matt-from-Wii.jpg"
+        },
+        {
+          name: "Friday Night Funkin vs AGOTI",
+          embedUrl: "https://fnf.run3.io/agoti/100/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/05/Friday-Night-Funkin-vs-AGOTI.jpg"
+        },
+        {
+          name: "FNF Sick of It – Speed VS KSI",
+          embedUrl: "https://fnf.kdata1.com/2024/sick-of-it-a-speed-vs-ksi-oneshot/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2024/11/fnf-sick-of-it-a-speed-vs-ksi-oneshot.jpg"
+        },
+        {
+          name: "FNF RUSH E but BOYFRIEND plays it on Piano",
+          embedUrl: "https://fnf.kdata1.com/rush-e-piano/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2022/12/FNF-RUSH-E-but-BOYFRIEND-plays-it-on-Piano.jpg"
+        },
+        {
+          name: "FNF: Zardy Foolhardy Mod Pack",
+          embedUrl: "https://fnf.run3.io/zardy-foolhardy-pack/1/?ds",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/06/fnf-zardy-foolhardy-mod-pack.jpg"
+        },
+        {
+          name: "FNF vs TABI Revival",
+          embedUrl: "https://fnf.kdata1.com/2025/tabi-revival/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2025/03/FNF-vs-TABI-Revival.jpg"
+        },
+        {
+          name: "FNF Vs. Hex 2 (Weekend Update)",
+          embedUrl: "https://fnf.kdata1.com/hex-weekend/2/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/04/friday-night-funkin-vs-hex-mod-full-week.jpg"
+        },
+        {
+          name: "Friday Night Funkin’ VS Shaggy 2.5",
+          embedUrl: "https://fnf.run3.io/shaggy-pe/1.25/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/10/friday-night-funkin-vs-shaggy-2-5.jpg"
+        },
+        {
+          name: "Friday Night Funkin vs Shaggy v2",
+          embedUrl: "https://fnf.run3.io/shaggy/6.5/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/05/friday-night-funkin-vs-shaggy.jpg"
+        },
+        {
+          name: "Friday Night Funkin’ Neo v3.0",
+          embedUrl: "https://fnf.run3.io/neo/2.5/?d",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/03/friday-night-funkin-neo-1.jpg"
+        },
+        {
+          name: "Friday Night Funkin vs Bob",
+          embedUrl: "https://fnf.run3.io/bob/1/?222",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/05/Friday-Night-Funkin-vs-Bob.jpg"
+        },
+        {
+          name: "Friday Night Funkin vs Flippy & Fliqpy",
+          embedUrl: "https://fnf.run3.io/flippy/1.16/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/07/Friday-Night-Funkin-vs-Flippy.jpg"
+        },
+        {
+          name: "FNF vs MrBeast (TeamSeas)",
+          embedUrl: "https://fnf.kdata1.com/teamsea/1/?dd",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/11/FNF-vs-MrBeast-TeamSeas.jpg"
+        },
+        {
+          name: "Attack of the Killer Beast, but is FNF Mod",
+          embedUrl: "https://fnf.kdata1.com/attack-of-the-killer-beast-but-is-fnf-mod/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2023/02/attack-of-the-killer-beast-but-is-fnf-mod.jpg"
+        },
+        {
+          name: "FNF Vs Super Funky Idol",
+          embedUrl: "https://fnf.kdata1.com/super-idol/1/",
+          thumbnail: "https://kbhgames.com/wp-content/uploads/2021/12/FNF-Vs-Super-Funky-Idol.jpg"
+        },
+      ];
+      renderGames("fnfGames", fnfGames);
+    </script>
+  </section>
+
+  <section id="rhythm" class="details-section hidden">
+    <button class="backButton"><i class="fa-solid fa-arrow-left"></i> Back</button>
+    <h2 class="section-title">Rhythm Games</h2>
+    <p class="section-desc">Move to the beat and match every note! Test your timing and reflexes.</p>
+
+    <div class="game-grid" id="rhythmGames"></div>
+    <script>
+      const rhythmGames = [
+        {
+          name: "OSU Online",
+          embedUrl: "https://webosu.online/",
+          thumbnail: "https://upload.wikimedia.org/wikipedia/commons/2/29/Osu%21_logo_2024.png"
+        },
+        {
+          name: "Rhythm Plus",
+          embedUrl: "https://rhythm-plus.com/",
+          thumbnail: "https://rhythm-plus.com/assets/logo2.png"
+        },
+        {
+          name: "Geometry Dash Lite",
+          embedUrl: "https://ozgames.io/geometry-dash/geometry-dash.embed",
+          thumbnail: "https://img.icons8.com/?size=512&id=oVj0wlZehUCr&format=png"
+        },
+        {
+          name: "Dashmetry",
+          embedUrl: "https://1games.io/game/geometry-lite/",
+          thumbnail: "https://www.play-games.com/files/img/dashmetry-1760714745.jpg"
+        },
+        {
+          name: "Geometry Vibes",
+          embedUrl: "https://html5.gamedistribution.com/rvvASMiM/b3507beea8bc46638a6d5e7c768a8202/index.html?gd_sdk_referrer_url=https%3A%2F%2Fwww.play-games.com%2Fgame%2F38380%2Fgeometry-vibes.html&gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL2h0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tL2IzNTA3YmVlYThiYzQ2NjM4YTZkNWU3Yzc2OGE4MjAyLz9nZF9zZGtfcmVmZXJyZXJfdXJsPWh0dHBzOi8vd3d3LnBsYXktZ2FtZXMuY29tL2dhbWUvMzgzODAvZ2VvbWV0cnktdmliZXMuaHRtbCIsInBhcmVudERvbWFpbiI6InBsYXktZ2FtZXMuY29tIiwidG9wRG9tYWluIjoicGxheS1nYW1lcy5jb20iLCJoYXNJbXByZXNzaW9uIjpmYWxzZSwibG9hZGVyRW5hYmxlZCI6dHJ1ZSwiaG9zdCI6Imh0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tIiwidmVyc2lvbiI6IjEuNS4xOCJ9",
+          thumbnail: "https://www.play-games.com/files/img/geometry-vibes-1735906455.jpg"
+        },
+        {
+          name: "Piano Tiles 3",
+          embedUrl: "https://www.h5games4u.com/games/Magic-Piano-Music/index.html",
+          thumbnail: "https://img.gamedistribution.com/58deefb8f63943dcbc5093070b9b5777-512x512.jpg"
+        },
+      ];
+      renderGames("rhythmGames", rhythmGames);
+    </script>
+  </section>
+  <section id="battleroyale" class="details-section hidden">
+    <button class="backButton"><i class="fa-solid fa-arrow-left"></i> Back</button>
+    <h2 class="section-title">Battle Royale</h2>
+    <p class="section-desc">Win em games bucko</p>
+
+    <div class="game-grid" id="battleroyaleGames"></div>
+    <script>
+      const battleroyaleGames = [
+        {
+          name: "1v1.lol",
+          embedUrl: "https://1v1.lol",
+          thumbnail: "https://1v1.lol/img/logo.png"
+        },
+        {
+          name: "yohoho.io",
+          embedUrl: "https://yohoho.io/",
+          thumbnail: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=94,height=94,fit=cover,f=auto/9b373b5219cd66a82389d81d7cda8e23/yohoho-io.jpeg"
+        },
+        {
+          name: "bruh.io",
+          embedUrl: "https://bruh.io/",
+          thumbnail: "https://bruh.io/logo.58fee131.png"
+        },
+        {
+          name: "ZombsRoyale.io",
+          embedUrl: "https://zombsroyale.io/",
+          thumbnail: "https://www1.minijuegosgratis.com/v3/games/thumbnails/224141_7_sq.jpg"
+        },
+        {
+          name: "Rebels Clash",
+          embedUrl: "https://bitlifeonline.github.io/rebels-clash/",
+          thumbnail: "https://images2.1games.io/cache/game/rebels-clash/rebels-clash-m200x130.webp"
+        },
+      ];
+      renderGames("battleroyaleGames", battleroyaleGames);
+    </script>
+  </section>
+  </section>
+  <section id="fps" class="details-section hidden">
+    <button class="backButton"><i class="fa-solid fa-arrow-left"></i> Back</button>
+    <h2 class="section-title">FPS</h2>
+    <p class="section-desc">Shoot em down</p>
+
+    <div class="game-grid" id="fpsGames"></div>
+    <script>
+      const fpsGames = [
+        {
+          name: "WarBrokers.io",
+          embedUrl: "https://warbrokers.io/signin.php",
+          thumbnail: "https://warbrokers.io/img/ui_logo_200.png"
+        },
+      ];
+      renderGames("fpsGames", fpsGames);
+    </script>
+  </section>
 </div>
 
 <style>
+  .hidden { display: none; }
   .games-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-player {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.95);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+  }
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #11111b;
+    color: #cdd6f4;
+    border-bottom: 1px solid #313244;
   }
 
   h1 {
@@ -64,14 +364,24 @@
     margin-bottom: 1.5rem;
   }
 
-  /* Sticky Search Bar */
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: white;
+  }
+
+  .section-desc {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #cdd6f4;
+  }
+
   .search-bar {
     position: sticky;
-    top: 0; /* keeps it visible at top of scroll */
+    top: 0;
     z-index: 10;
     display: flex;
     align-items: center;
-    position: sticky;
     background: #1e1e2e;
     padding: 10px 0;
     margin-bottom: 2rem;
@@ -102,16 +412,6 @@
     font-size: 1.1rem;
   }
 
-  /* Game Sections */
-  .game-section {
-    margin-bottom: 2rem;
-  }
-
-  .game-section h2 {
-    color: #89b4fa;
-    margin-bottom: 1rem;
-  }
-
   .game-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -128,26 +428,123 @@
     font-weight: 500;
     transition: all 0.3s;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
 
   .game-card:hover {
-    background: #313244;
     border-color: #cba6f7;
     transform: translateY(-3px);
   }
 
-  .game-card span {
+  .game-thumb img {
+    width: 100%;
+    border-radius: 8px;
     display: block;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  .game-section h2 {
+    color: white;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .game-thumb:hover .overlay {
+    opacity: 1;
+  }
+
+  .play-button {
+    background: #cba6f7;
+    border: none;
+    color: #1e1e2e;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .play-button:hover {
+    background: #b4befe;
+  }
+
+  .game-card span {
+    display: block;
+    margin-top: 0.5rem;
+    color: #cdd6f4;
+  }
+
+  .details-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+
+  .details-section.active-section {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .backButton {
+    background: #181825;
+    color: #cdd6f4;
+    border: 1px solid #313244;
+    border-radius: 8px;
+    padding: 8px 15px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .backButton:hover {
+    background: #313244;
+    border-color: #cba6f7;
+  }
+
+  .player-button {
+    background: #cba6f7;
+    border: none;
+    color: #1e1e2e;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .player-button:hover {
+    background: #b4befe;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .active-section {
+    display: block;
   }
 </style>
 
 <script>
-  // Simple search filter
+  const player = document.getElementById("gamePlayer");
+  const embed = document.getElementById("gameEmbed");
+  const title = document.getElementById("gameTitle");
+  const closeGame = document.getElementById("closeGame");
+  const fullscreenGame = document.getElementById("fullscreenGame");
+
   const searchInput = document.getElementById("gameSearch");
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
@@ -156,5 +553,48 @@
       card.style.display = name.includes(query) ? "block" : "none";
     });
   });
-</script>
 
+  const mainLibrary = document.getElementById("mainLibrary");
+  const detailSections = document.querySelectorAll(".details-section");
+
+  function openGame(game) {
+    embed.src = game.embedUrl;
+    title.textContent = game.name;
+    player.classList.remove("hidden");
+  }
+  closeGame.addEventListener("click", () => {
+    embed.src = "about:blank";
+    embed.srcdoc = "";
+    player.classList.add("hidden");
+  });
+  fullscreenGame.addEventListener("click", () => {
+    embed.requestFullscreen();
+  });
+
+  document.querySelectorAll(".game-card[data-target]").forEach(card => {
+    card.addEventListener("click", () => {
+      const targetId = card.dataset.target;
+      const targetSection = document.getElementById(targetId);
+
+      if (targetSection) {
+        mainLibrary.classList.remove("active-section");
+        mainLibrary.classList.add("hidden");
+
+        detailSections.forEach(sec => sec.classList.add("hidden"));
+        targetSection.classList.remove("hidden");
+        requestAnimationFrame(() => targetSection.classList.add("active-section"));
+      }
+    });
+  });
+
+  document.querySelectorAll(".backButton").forEach(button => {
+    button.addEventListener("click", () => {
+      detailSections.forEach(sec => {
+        sec.classList.remove("active-section");
+        sec.classList.add("hidden");
+      });
+      mainLibrary.classList.remove("hidden");
+      requestAnimationFrame(() => mainLibrary.classList.add("active-section"));
+    });
+  });
+</script>
